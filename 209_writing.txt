@@ -1,0 +1,53 @@
+﻿addecho.c — Linux Manual Page
+
+
+NAME
+
+        addecho- adds an echo effect to a WAV audio file.        
+
+
+SYNOPSIS
+
+	addecho [-d delay] [-v volume\_scale] sourcewav destwav
+
+
+DESCRIPTION
+
+        Addecho is a specialized audio processing tool that creates echo effects in WAV files. This command-line utility generates a destination WAV file with the desired echo effect based on a source WAV file. An echo effect is created 	by mixing original audio samples with delayed versions, thereby mimicking the natural phenomenon of sound reflection. Mixing is done by adding samples from the original audio to its corresponding sample in the delayed version 	divided by a volume scale.
+
+
+	Two parameters define the echo effect: the delay interval and the volume scale. A delay is a measurement of distance between the original sound and its echo, which is used to determine whether the echo is perceived as being too 	distant or too close to the original sound. A substantial delay may produce an overt echo, while a minimal delay may produce an effect similar to reverberation. Alternately, the volume scale modulates the loudness of the echo in 	relation to the original sound. A larger volume scale ensures that the echo remains a subtle background effect, whereas a smaller scale makes it more prominent.
+
+
+	These parameters can be customized by the user to suit their auditory vision. If no user-defined parameters are specified, addecho defaults to preset values. The program manages a buffer that retains the delayed samples, thus 	guaranteeing a smooth and cohesive echo throughout the audio track.\\
+
+
+	Additionally, addecho updates the WAV header to reflect the augmented audio data size. Due to the fact that the WAV format has specific data in its header, including file size and audio formatting details, this step is crucial 	for correct playback of the output file. An audio buffer optimizes resource use by dynamically allocating memory. With rigorous checks on memory allocation and file operations, it protects against operational failures and keeps 	data safe.
+
+
+RETURN VALUES
+
+	Addecho exits with status 0 if all files are processed successfully, resulting in the creation of a WAV file with an echo. If a status other than 0 occurs, the program has encountered an error, which could be because of, for 	example, incorrect arguments.  This is deliberately a very broad description, but if the return value is non-zero, you should not rely on the correctness of the results of Addecho.
+
+
+EXAMPLES
+
+	1. ./addecho input.wav output.wav 
+
+		Adds a default echo (delay=8000, volume_scale= 4) to input.wav and writes the result to output.wav.
+
+	2. ./addecho -d 8000 -v 5 input.wav output.wav 
+
+		Adds an echo with 8000-sample delay and a volume scale of 5 to input.wav and writes the result to output.wav.
+
+
+WARNINGS
+
+	Running the program with incorrect command-line arguments will result in an error message and no changes to the audio file. The program expects WAV files and integer values for delay and volume only, and may not function 	correctly with other file formats. Also, insufficient memory for processing may cause the program to exit prematurely.
+
+
+BUGS
+
+	Known issues include:
+		* Extra echo effect: Users have reported an unintended increase in the echo effect at the end of the WAV file.
+		* Header mismatch: In some cases, the updated header sizes may not match the actual data size, leading to playback issues.
